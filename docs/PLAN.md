@@ -109,10 +109,10 @@ Build the dashboard's frame, brand and first two pages. Components go in domain 
 
 Success criteria:
 
-- [ ] vitest tests cover the queue table, the state badges, money formatting and the instructions page, with `fetch` stubbed.
-- [ ] In the browser (Playwright MCP), the queue shows 25 claims, all "Waiting", in the brand fonts and colors, in light and dark mode.
-- [ ] In the browser, the instructions page shows the text from `GET /api/instructions` with no way to edit it.
-- [ ] `npm run check:ts` passes with coverage of 80% or more, strict TypeScript and no `any`.
+- [x] vitest tests cover the queue table, the state badges, money formatting and the instructions page, with `fetch` stubbed.
+- [x] In the browser (Playwright script; the Chrome DevTools MCP browser was locked by another session), the queue shows 25 claims, all "Waiting", in the brand fonts and colors, in light and dark mode.
+- [x] In the browser, the instructions page shows the text from `GET /api/instructions` with no way to edit it.
+- [x] `npm run check:ts` passes with coverage of 80% or more, strict TypeScript and no `any`.
 
 ## Phase 5: The claim page and live activity
 
@@ -125,11 +125,11 @@ Build the page a handler spends their time on.
 
 Success criteria:
 
-- [ ] vitest tests cover each part of the claim page: a waiting claim, one in progress with steps, one decided, and one waiting for sign-off, including the sign-off call.
-- [ ] In the browser, after recording a decision through the API, the claim page shows the decision, payout, reason and section.
-- [ ] In the browser, a claim approved over $1,000 shows "Waiting for sign-off"; signing off as Dana Whitfield shows it decided and paid.
-- [ ] In the browser, running the agent on a claim (live model) shows steps appear while it works and the decision at the end.
-- [ ] `npm run check:ts` passes with coverage of 80% or more.
+- [x] vitest tests cover each part of the claim page: a waiting claim, one in progress with steps, one decided, and one waiting for sign-off, including the sign-off call.
+- [x] In the browser, after recording a decision through the API, the claim page shows the decision, payout, reason and section.
+- [x] In the browser, a claim approved over $1,000 shows "Waiting for sign-off"; signing off as Dana Whitfield shows it decided and paid.
+- [x] In the browser, running the agent on a claim (live model) shows steps appear while it works and the decision at the end.
+- [x] `npm run check:ts` passes with coverage of 80% or more.
 
 ## Phase 6: End-to-end tests and handover
 
