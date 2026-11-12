@@ -89,14 +89,14 @@ Replace the hello-world agent with the claim agent. It reads everything through 
 
 Success criteria:
 
-- [ ] With a stub model that calls each read tool, then `record_decision` and `pay_claim`, a test shows the claim decided and paid and the steps logged in order.
-- [ ] With a stub model that approves $1,250.00 and then calls `pay_claim`, the claim ends in `awaiting_sign_off` with no payment, and the agent's tool result says the payment needs a handler's sign-off.
-- [ ] A failing run logs an `error` step and puts the claim back in `waiting`.
-- [ ] `POST /api/claims/CLM-1001/agent-run` returns at once, and with the stub the claim is decided.
-- [ ] The model defaults to `openai/gpt-6-luna` and follows `MODEL_NAME` when it's set (existing test kept).
-- [ ] No test calls a real model.
-- [ ] One live run: `uv run -m backend.seed` then `uv run -m agent CLM-1001` with the backend running decides the claim with a reason and a policy section (this one uses the OpenRouter key).
-- [ ] `npm run check:python` passes with coverage of 80% or more.
+- [x] With a stub model that calls each read tool, then `record_decision` and `pay_claim`, a test shows the claim decided and paid and the steps logged in order.
+- [x] With a stub model that approves $1,250.00 and then calls `pay_claim`, the claim ends in `awaiting_sign_off` with no payment, and the agent's tool result says the payment needs a handler's sign-off.
+- [x] A failing run logs an `error` step and puts the claim back in `waiting`.
+- [x] `POST /api/claims/CLM-1001/agent-run` returns at once, and with the stub the claim is decided.
+- [x] The model defaults to `openai/gpt-6-luna` and follows `MODEL_NAME` when it's set (existing test kept).
+- [x] No test calls a real model.
+- [x] One live run: `uv run -m backend.seed` then `uv run -m agent CLM-1001` with the backend running decides the claim with a reason and a policy section (this one uses the OpenRouter key).
+- [x] `npm run check:python` passes with coverage of 80% or more.
 
 ## Phase 4: The dashboard's queue and instructions
 

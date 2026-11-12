@@ -6,9 +6,11 @@ from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import BackgroundTasks, FastAPI, HTTPException
 
+from agent.main import run
 from backend.db import connect, ensure_seeded
 from backend.models import Decision, Payment, SignOff, Step
 
@@ -302,3 +304,13 @@ def add_step(claim_id: str, step: Step) -> Record:
             (claim_id, step.kind, step.text),
         )
     return {"id": cursor.lastrowid, "kind": step.kind, "text": step.text}
+
+
+@app.post("/api/claims/{claim_id}/agent-run", operation_id="run_agent")
+def run_agent(claim_id: str, background: BackgroundTasks) -> Record:
+    """Start the UnderCover Agent on a waiting claim."""
+    with connect() as connection:
+        require_status(claim_row(connection, claim_id), "waiting")
+    thread_id = uuid4().hex
+    background.add_task(run, claim_id, thread_id)
+    return {"claim_id": claim_id, "thread_id": thread_id}
