@@ -137,11 +137,11 @@ Lock the flows in with Playwright, update the documents and run every check.
 
 - Playwright runs its own backend and dashboard on ports 8001 and 5174, with a fresh database set through the webServer `env` option (so it works on Windows and doesn't touch the dev database). The Vite proxy reads the backend port from the environment.
 - End-to-end tests: the queue lists 25 claims; a claim opens in full; a decision recorded through the API shows on the claim page and in the queue; the over-limit flow with the blocked payment and the sign-off; the instructions page. None of them calls a model.
-- `docs/STATUS.md`: what's built and how to run it. `README.md`: short notes on running the pilot.
+- `docs/STATUS.md`: what's built and how to run it. (The course `README.md` is left as it is, so pulling the course's updates stays clean; STATUS holds the run notes.)
 
 Success criteria:
 
-- [ ] `npm run e2e` passes, with the old health test replaced by these.
-- [ ] `npm run dev`, then running the agent from the dashboard on three claims of different types, decides each with a reason and a section (live model).
-- [ ] `docs/STATUS.md` describes the pilot as built and how to run it.
-- [ ] `npm run check` passes in full.
+- [x] `npm run e2e` passes, with the old health test replaced by these.
+- [x] `npm run dev`, then running the agent from the dashboard on three claims of different types, decides each with a reason and a section (live model).
+- [x] `docs/STATUS.md` describes the pilot as built and how to run it.
+- [x] `npm run check` passes in full.
