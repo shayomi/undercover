@@ -113,6 +113,12 @@ def test_command_line(monkeypatch, capsys):
     assert "Approved $420.00." in capsys.readouterr().out
 
 
+def test_command_line_needs_a_claim_id(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["agent"])
+    with pytest.raises(SystemExit, match="Usage: uv run -m agent CLM-1001"):
+        runpy.run_module("agent", run_name="__main__")
+
+
 def test_backend_url(monkeypatch):
     monkeypatch.setenv("UNDERCOVER_BACKEND_URL", "http://localhost:8001")
     assert str(real_backend().base_url) == "http://localhost:8001"
