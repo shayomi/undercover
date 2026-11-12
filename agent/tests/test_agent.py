@@ -8,6 +8,7 @@ from langchain_core.messages import AIMessage
 
 import backend.main
 from agent import main
+from backend import db
 from backend.main import app
 
 real_backend = main.backend
@@ -113,10 +114,50 @@ def test_command_line(monkeypatch, capsys):
     assert "Approved $420.00." in capsys.readouterr().out
 
 
-def test_command_line_needs_a_claim_id(monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["agent"])
-    with pytest.raises(SystemExit, match="Usage: uv run -m agent CLM-1001"):
+def test_command_line_takes_one_claim_id_at_most(monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["agent", "CLM-1001", "CLM-1002"])
+    with pytest.raises(SystemExit, match=r"Usage: uv run -m agent \[CLM-1001\]"):
         runpy.run_module("agent", run_name="__main__")
+
+
+def test_command_line_works_the_queue(client, monkeypatch, capsys):
+    with db.connect() as connection:
+        connection.execute(
+            "UPDATE claims SET status = 'decided' "
+            "WHERE claim_id NOT IN ('CLM-1001', 'CLM-1002', 'CLM-1003')"
+        )
+    replies = {
+        "CLM-1001": calls(decision(420.0), answer="Approved $420.00."),
+        "CLM-1002": StubModel(messages=iter([])),
+        "CLM-1003": calls(answer="Referred."),
+    }
+    started = []
+
+    def model_for_next_claim():
+        claim_id = ["CLM-1001", "CLM-1002", "CLM-1003"][len(started)]
+        started.append(claim_id)
+        return replies[claim_id]
+
+    monkeypatch.setattr(sys, "argv", ["agent"])
+    monkeypatch.setattr(main, "model", model_for_next_claim)
+    runpy.run_module("agent", run_name="__main__")
+
+    lines = capsys.readouterr().out.splitlines()
+    assert lines[0] == "3 claims waiting"
+    assert lines[1] == "[1/3] CLM-1001: Approved $420.00."
+    assert lines[2].startswith("[2/3] CLM-1002: stopped:")
+    assert lines[3] == "[3/3] CLM-1003: Referred."
+    assert claim(client)["status"] == "decided"
+    statuses = {c["claim_id"]: c["status"] for c in client.get("/api/claims").json()}
+    assert statuses["CLM-1002"] == "waiting"
+
+
+def test_waiting_claims_skips_the_rest(client):
+    client.post("/api/claims/CLM-1001/start")
+    waiting = main.waiting_claims()
+    assert len(waiting) == 24
+    assert "CLM-1001" not in waiting
+    assert waiting == sorted(waiting)
 
 
 def test_backend_url(monkeypatch):

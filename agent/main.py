@@ -46,6 +46,13 @@ def call(method: str, path: str, body: dict[str, Any] | None = None) -> str:
     return response.text
 
 
+def waiting_claims() -> list[str]:
+    """Return the ids of the claims waiting in the queue, in order."""
+    with backend() as client:
+        claims = client.get("/api/claims").raise_for_status().json()
+    return [claim["claim_id"] for claim in claims if claim["status"] == "waiting"]
+
+
 def add_step(claim_id: str, kind: str, text: str) -> None:
     """Log one step of the agent's work on the claim."""
     call("POST", f"/api/claims/{claim_id}/steps", {"kind": kind, "text": text})

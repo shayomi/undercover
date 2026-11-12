@@ -13,7 +13,7 @@ The claims pilot from `docs/PLAN.md` is built.
 
 - `npm run dev` starts the backend on port 8000 and the dashboard on http://localhost:5173. Open a claim and press "Run agent" to watch the agent decide it.
 - `uv run -m backend.seed` resets the database (`backend/undercover.db`) to the 25 waiting claims. Set `UNDERCOVER_DB` to use another file.
-- `uv run -m agent CLM-1001` runs the agent on one claim from the command line, with the backend running. `UNDERCOVER_BACKEND_URL` sets where it finds the backend (default `http://localhost:8000`) and `MODEL_NAME` the model (default `openai/gpt-6-luna`; `openrouter/free` is free).
+- `uv run -m agent CLM-1001` runs the agent on one claim from the command line, with the backend running. `uv run -m agent` on its own works through every waiting claim, one at a time, printing each result and carrying on past any run that fails; each claim's steps show live in the dashboard. `UNDERCOVER_BACKEND_URL` sets where it finds the backend (default `http://localhost:8000`) and `MODEL_NAME` the model (default `openai/gpt-6-luna`; `openrouter/free` is free).
 - `npm run check` runs every check.
 
 ## Notes
